@@ -1,0 +1,86 @@
+{
+  "files": [
+    {
+      "source_file": "SVG Dataset/0000-0002.svg",
+      "num_primitives": 1076,
+      "type_counts": {
+        "LINE": 631,
+        "ARC": 412,
+        "ANNOTATION": 33
+      },
+      "group_counts": {
+        "layer0": 51,
+        "layerAXIS": 2,
+        "layerCOLUMN": 16,
+        "layerDIM_LEAD": 11,
+        "layerDOTE": 11,
+        "layerPUB_DIM": 83,
+        "layerPUB_HATCH": 16,
+        "layerPUB_TEXT": 3,
+        "layerWALL": 71,
+        "layerWINDOW": 44,
+        "layerWINDOW_TEXT": 9,
+        "layer地饰": 25,
+        "layer家具": 221,
+        "layer装施家具": 513
+      },
+      "text_primitives": 33,
+      "skipped_existing": false
+    },
+    {
+      "source_file": "SVG Dataset/0000-0003.svg",
+      "num_primitives": 1056,
+      "type_counts": {
+        "LINE": 622,
+        "ARC": 412,
+        "ANNOTATION": 22
+      },
+      "group_counts": {
+        "layer0": 49,
+        "layerAXIS": 2,
+        "layerCOLUMN": 8,
+        "layerDIM_LEAD": 11,
+        "layerDOTE": 11,
+        "layerPUB_DIM": 39,
+        "layerPUB_HATCH": 8,
+        "layerPUB_TEXT": 3,
+        "layerWALL": 101,
+        "layerWINDOW": 67,
+        "layerWINDOW_TEXT": 11,
+        "layer地饰": 24,
+        "layer家具": 209,
+        "layer装施家具": 513
+      },
+      "text_primitives": 22,
+      "skipped_existing": false
+    },
+    {
+      "source_file": "SVG Dataset/0000-0005.svg",
+      "num_primitives": 1242,
+      "type_counts": {
+        "LINE": 721,
+        "ARC": 500,
+        "ANNOTATION": 21
+      },
+      "group_counts": {
+        "layer0": 78,
+        "layerAXIS": 4,
+        "layerAXIS_TEXT": 11,
+        "layerCOLUMN": 4,
+        "layerDIM_LEAD": 6,
+        "layerDOTE": 12,
+        "layerPUB_DIM": 30,
+        "layerPUB_HATCH": 4,
+        "layerPUB_TEXT": 3,
+        "layerWALL": 109,
+        "layerWINDOW": 53,
+        "layerWINDOW_TEXT": 10,
+        "layer地饰": 48,
+        "layer家具": 297,
+        "layer装施家具": 573
+      },
+      "text_primitives": 21,
+      "skipped_existing": false
+    }
+  ]
+}

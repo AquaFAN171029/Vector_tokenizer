@@ -1,0 +1,96 @@
+{
+  "num_files_total": 3,
+  "num_files_success": 3,
+  "num_files_failed": 0,
+  "total_primitives": 3374,
+  "avg_primitives_per_file": 1124.667,
+  "min_primitives_per_file": 1056,
+  "max_primitives_per_file": 1242,
+  "type_counts": {
+    "LINE": 1974,
+    "ARC": 1324,
+    "ANNOTATION": 76
+  },
+  "num_text_or_annotation_primitives": 76,
+  "top_groups": [
+    [
+      "layer装施家具",
+      1599
+    ],
+    [
+      "layer家具",
+      727
+    ],
+    [
+      "layerWALL",
+      281
+    ],
+    [
+      "layer0",
+      178
+    ],
+    [
+      "layerWINDOW",
+      164
+    ],
+    [
+      "layerPUB_DIM",
+      152
+    ],
+    [
+      "layer地饰",
+      97
+    ],
+    [
+      "layerDOTE",
+      34
+    ],
+    [
+      "layerWINDOW_TEXT",
+      30
+    ],
+    [
+      "layerCOLUMN",
+      28
+    ],
+    [
+      "layerDIM_LEAD",
+      28
+    ],
+    [
+      "layerPUB_HATCH",
+      28
+    ],
+    [
+      "layerAXIS_TEXT",
+      11
+    ],
+    [
+      "layerPUB_TEXT",
+      9
+    ],
+    [
+      "layerAXIS",
+      8
+    ]
+  ],
+  "failures": [],
+  "tokenizer_config": {
+    "geom_bins": 256,
+    "pos_bins": 256,
+    "width_bins": 32,
+    "opacity_bins": 11,
+    "min_text_freq": 1
+  },
+  "embedding_config": {
+    "output_dim": 256,
+    "type_dim": 32,
+    "geom_dim": 128,
+    "style_dim": 32,
+    "pos_dim": 64,
+    "text_dim": 64,
+    "group_dim": 16,
+    "seed": 13,
+    "decimals": 6
+  }
+}

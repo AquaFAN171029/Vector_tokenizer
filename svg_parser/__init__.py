@@ -1,0 +1,2 @@
+"""SVG parser package."""
+
