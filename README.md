@@ -1,18 +1,14 @@
-# CAD/SVG Vector Pipeline
-
-This repository contains a prototype pipeline for converting CAD-derived SVG drawings into primitive-level vector embeddings.
+# SVG Vector Pipeline
 
 The current pipeline is:
 
 ```text
-SVG drawing
+SVG drawin g
   -> parser JSON
   -> tokenized primitive records
   -> channel embeddings
   -> fused 256-dimensional primitive embeddings
 ```
-
-The implementation is intentionally simple and explicit. It is designed to make the representation pipeline easy to inspect before replacing the prototype embedder with a trainable neural module.
 
 ## Directory Layout
 
@@ -57,7 +53,7 @@ vector_pipeline/
 
 ## Quick Start
 
-Run the single-file pipeline:
+Run the pipeline:
 
 ```bash
 python3 vector_pipeline/svg_parser/svg_parser_v2.py vector_pipeline/svg_parser/input.svg -o vector_pipeline/svg_parser/output.json
@@ -65,7 +61,7 @@ python3 -m vector_pipeline.tokenizer.run_tokenizer vector_pipeline/svg_parser/ou
 python3 -m vector_pipeline.tokenizer.run_embedding vector_pipeline/tokenizer/output.tokenized.json -o vector_pipeline/tokenizer/output.embeddings.json
 ```
 
-Run a small dataset smoke test:
+Run a small dataset test:
 
 ```bash
 python3 -m vector_pipeline.pipeline.run_svg_dataset_pipeline --input-dir "SVG Dataset" --output-dir outputs/processed_dataset_sample --limit 3 --overwrite
@@ -91,7 +87,7 @@ vector_pipeline/outputs/processed_dataset/
 
 ## Stage 1: Parser
 
-The parser converts SVG path/text elements into a canonical primitive schema.
+The parser converts SVG elements into a primitive schema.
 
 Supported primitive types:
 
@@ -154,7 +150,7 @@ Each primitive follows this schema:
 
 ## Stage 2: Tokenizer
 
-The tokenizer converts each primitive into a symbolic token record.
+The tokenizer converts each primitive into a token record.
 
 Tokenizer output per primitive:
 
@@ -173,13 +169,13 @@ Tokenizer output per primitive:
 
 ### Sequence Ordering
 
-Before tokenization, primitives are sorted into a deterministic sequence:
+Before tokenization, primitives are sorted into a sequence:
 
 ```text
 parent_group_id -> cy -> cx -> primitive_id
 ```
 
-This means:
+Sorting Rules:
 
 1. Group by `meta.parent_group_id`.
 2. Within each group, sort top-to-bottom by `position.cy`.
@@ -220,8 +216,6 @@ geometry.coords
 geometry.geom_mask
 viewBox = [vx, vy, vw, vh]
 ```
-
-The parser always writes an 8-slot geometry vector. Different primitive types interpret the slots differently.
 
 | Primitive type | `coords` slot meaning |
 |---|---|
@@ -374,8 +368,6 @@ Default:
 min_text_freq = 1
 ```
 
-With the default, every observed text string is kept as a text token.
-
 ### Group Token Mapping
 
 Input:
@@ -397,11 +389,9 @@ Output:
 group_token
 ```
 
-The group token is preserved because grouping/layer structure is important for region-aware sequence construction.
-
 ## Stage 3: Embedder
 
-The embedder maps each tokenized primitive into one fused 256-dimensional vector.
+The embedder maps each tokenized primitive into one fused 256 dimensional vector.
 
 Current embedding shape:
 
@@ -416,38 +406,6 @@ group_emb = 16
 concat_dim = 32 + 128 + 32 + 64 + 64 + 16 = 336
 output_dim = 256
 ```
-
-Each channel dimension is selected from:
-
-```text
-{16, 32, 64, 128}
-```
-
-### Token-to-Vector Rule
-
-For the current prototype, each symbolic token is mapped to a deterministic vector using:
-
-```text
-SHA-256(seed, token, dim) -> pseudo-random vector -> L2 normalization
-```
-
-This gives stable, reproducible vectors without training.
-
-Important:
-
-```text
-PAD tokens are ignored during channel pooling.
-```
-
-### Channel Pooling Rule
-
-Each channel can contain one or more tokens. The embedder averages token vectors inside each channel:
-
-```text
-channel_emb = average(non_PAD_token_vectors)
-```
-
-If a channel has no valid token, it becomes a zero vector.
 
 ### Fusion Rule
 
@@ -477,8 +435,6 @@ Output per primitive:
 ```
 
 The real `embedding` list has 256 numbers.
-
-Note: this embedder is a deterministic prototype. For training, this module can be replaced by trainable `nn.Embedding` layers and a trainable MLP while keeping the same channel structure.
 
 ## Batch Dataset Output
 
@@ -530,11 +486,4 @@ Success: 3
 Failed: 0
 Total primitives: 3374
 ```
-
-## Notes
-
-- The parser currently focuses on `LINE`, `ARC`, `POLYLINE`, `TEXT`, and `ANNOTATION`.
-- The tokenizer is type-aware for geometry because the eight geometry slots have different meanings for different primitive types.
-- The final 256-dimensional vector is fused; after fusion, individual dimensions no longer correspond directly to one channel.
-- To inspect channel-specific information, read the tokenized JSON or modify the embedder to also save pre-fusion channel embeddings.
-
+last update: 23 May 2026 Tianyu FAN
