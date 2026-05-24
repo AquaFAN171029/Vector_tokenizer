@@ -36,19 +36,6 @@ vector_pipeline/
     run_svg_dataset_pipeline.py
     README.md
 
-  docs/
-    generated/
-      pipeline_architecture_tokenizer_embedder.docx
-      build_pipeline_doc.py
-      doc_assets/
-    reference/
-      tokenizer.docx
-      tokenizer.pdf
-      tokenizer_requirement.pdf
-
-  outputs/
-    processed_dataset_sample/
-    processed_dataset_smoke/
 ```
 
 ## Quick Start
