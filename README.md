@@ -1047,13 +1047,6 @@ Per type-pair test result:
 | `LINE-ARC` | 36,662 | 0.138127 | 0.487367 | 0.217590 | 0.300859 |
 | `ARC-ARC` | 5,554 | 0.229198 | 0.441006 | 0.111328 | 0.177778 |
 
-Interpretation:
-
-```text
-The pairwise relation head learns useful geometric information from the 256-D primitive embeddings.
-Performance is strongest on dominant LINE-LINE relations.
-ARC-related relations are weaker because they are sparser and geometrically more difficult.
-```
 
 ## Notes
 
