@@ -19,6 +19,7 @@ if str(PIPELINE_ROOT) not in sys.path:
 from svg_parser.svg_parser_v2 import SvgParser
 from tokenizer.dataset_reader import save_tokenized_json
 from tokenizer.embedding_generator import EmbeddingConfig, EmbeddingGenerator, save_embedding_json
+from tokenizer.flow_embedding_generator import FlowEmbeddingConfig, FlowEmbeddingGenerator, save_flow_embedding_json
 from tokenizer.primitive_tokenizer import TokenizerConfig
 from tokenizer.run_tokenizer import tokenize_parser_json
 
@@ -96,7 +97,8 @@ def process_one(
     input_dir: Path,
     output_dir: Path,
     tokenizer_config: TokenizerConfig,
-    embedding_config: EmbeddingConfig,
+    embedding_config: EmbeddingConfig | FlowEmbeddingConfig,
+    embedding_strategy: str,
     overwrite: bool,
     write_embeddings: bool,
 ) -> Dict[str, Any]:
@@ -114,8 +116,12 @@ def process_one(
     save_tokenized_json(tokenized, paths["tokenized"])
 
     if write_embeddings:
-        embedded = EmbeddingGenerator(embedding_config).embed_sequence(tokenized)
-        save_embedding_json(embedded, paths["embedding"])
+        if embedding_strategy == "flow":
+            embedded = FlowEmbeddingGenerator(embedding_config).embed_parser_json(parsed)
+            save_flow_embedding_json(embedded, paths["embedding"])
+        else:
+            embedded = EmbeddingGenerator(embedding_config).embed_sequence(tokenized)
+            save_embedding_json(embedded, paths["embedding"])
 
     return summarize_file(svg_path, parsed, skipped=False)
 
@@ -148,6 +154,20 @@ def main() -> None:
     parser.add_argument("--width-bins", type=int, default=32)
     parser.add_argument("--opacity-bins", type=int, default=11)
     parser.add_argument("--min-text-freq", type=int, default=1)
+    parser.add_argument(
+        "--embedding-strategy",
+        choices=("token-hash", "flow"),
+        default="token-hash",
+        help=(
+            "token-hash uses tokenized discrete geometry/position tokens. "
+            "flow uses raw continuous geometry/position values with hash for discrete fields."
+        ),
+    )
+    parser.add_argument("--text-backend", choices=("hash", "qwen"), default="hash")
+    parser.add_argument("--qwen-model", default="text-embedding-v4")
+    parser.add_argument("--qwen-base-url", default="https://dashscope-intl.aliyuncs.com/compatible-mode/v1")
+    parser.add_argument("--qwen-cache-path", default="outputs/cache/qwen_text_embeddings_64.json")
+    parser.add_argument("--qwen-api-key-env", default="DASHSCOPE_API_KEY")
     parser.add_argument("--seed", type=int, default=13)
     args = parser.parse_args()
 
@@ -157,6 +177,9 @@ def main() -> None:
     output_dir = Path(args.output_dir)
     if not output_dir.is_absolute():
         output_dir = PIPELINE_ROOT / output_dir
+    qwen_cache_path = Path(args.qwen_cache_path)
+    if not qwen_cache_path.is_absolute():
+        qwen_cache_path = PIPELINE_ROOT / qwen_cache_path
     if not input_dir.exists():
         raise FileNotFoundError(f"Input directory not found: {input_dir}")
 
@@ -167,7 +190,25 @@ def main() -> None:
         opacity_bins=args.opacity_bins,
         min_text_freq=args.min_text_freq,
     )
-    embedding_config = EmbeddingConfig(seed=args.seed)
+    embedding_config: EmbeddingConfig | FlowEmbeddingConfig
+    if args.embedding_strategy == "flow":
+        embedding_config = FlowEmbeddingConfig(
+            text_backend=args.text_backend,
+            qwen_model=args.qwen_model,
+            qwen_base_url=args.qwen_base_url,
+            qwen_cache_path=str(qwen_cache_path),
+            qwen_api_key_env=args.qwen_api_key_env,
+            seed=args.seed,
+        )
+    else:
+        embedding_config = EmbeddingConfig(
+            text_backend=args.text_backend,
+            qwen_model=args.qwen_model,
+            qwen_base_url=args.qwen_base_url,
+            qwen_cache_path=str(qwen_cache_path),
+            qwen_api_key_env=args.qwen_api_key_env,
+            seed=args.seed,
+        )
     svg_files = find_svg_files(input_dir, args.limit)
 
     records: List[Dict[str, Any]] = []
@@ -183,6 +224,7 @@ def main() -> None:
                 output_dir=output_dir,
                 tokenizer_config=tokenizer_config,
                 embedding_config=embedding_config,
+                embedding_strategy=args.embedding_strategy,
                 overwrite=args.overwrite,
                 write_embeddings=not args.skip_embeddings,
             )
@@ -205,6 +247,7 @@ def main() -> None:
 
     summary = summarize_records(records, failures)
     summary["tokenizer_config"] = asdict(tokenizer_config)
+    summary["embedding_strategy"] = args.embedding_strategy
     summary["embedding_config"] = None if args.skip_embeddings else asdict(embedding_config)
     write_json(summary, output_dir / "summary.json")
     write_json({"files": records}, output_dir / "manifest.json")

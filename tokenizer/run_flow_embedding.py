@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 try:
-    from .cli.run_tokenizer import main, tokenize_parser_json
+    from .cli.run_flow_embedding import main
 except ImportError:
     from pathlib import Path
     import sys
@@ -10,9 +10,9 @@ except ImportError:
     package_root = Path(__file__).resolve().parents[1]
     if str(package_root) not in sys.path:
         sys.path.insert(0, str(package_root))
-    from tokenizer.cli.run_tokenizer import main, tokenize_parser_json
+    from tokenizer.cli.run_flow_embedding import main
 
-__all__ = ["main", "tokenize_parser_json"]
+__all__ = ["main"]
 
 
 if __name__ == "__main__":

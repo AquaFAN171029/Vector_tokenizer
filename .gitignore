@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+outputs/
+*.zip
+
+.env
+*.env
+
+docs/generated/word_temp_*.docx
+docs/generated/~*.docx
