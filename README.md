@@ -104,7 +104,7 @@ python3 -m vector_pipeline.tokenizer.run_embedding \
 Run embedding with Qwen text embeddings for the text channel:
 
 ```bash
-export DASHSCOPE_API_KEY="your_api_key_here"
+export DASHSCOPE_API_KEY="API_KEY"
 
 python3 -m vector_pipeline.tokenizer.run_embedding \
   vector_pipeline/examples/single_file/tokenized.json \
@@ -116,7 +116,7 @@ python3 -m vector_pipeline.tokenizer.run_embedding \
 Run the single-file hybrid flow embedding path:
 
 ```bash
-export DASHSCOPE_API_KEY="your_api_key_here"
+export DASHSCOPE_API_KEY="API_KEY"
 
 python3 -m vector_pipeline.tokenizer.run_flow_embedding \
   vector_pipeline/examples/single_file/parsed.json \
@@ -139,7 +139,7 @@ python3 -m vector_pipeline.pipeline.run_svg_dataset_pipeline --input-dir "SVG Da
 Run the full dataset with Qwen text embeddings:
 
 ```bash
-export DASHSCOPE_API_KEY="your_api_key_here"
+export DASHSCOPE_API_KEY="API_KEY"
 
 python3 -m vector_pipeline.pipeline.run_svg_dataset_pipeline \
   --input-dir "SVG Dataset" \
@@ -177,7 +177,7 @@ cd "/Users/aquafan/Library/Mobile Documents/com~apple~CloudDocs/POLYU STUDY/McGi
 The current main embedding run uses official Qwen/DashScope `text-embedding-v4` for the text channel and keeps the final fused primitive embedding at 256 dimensions.
 
 ```bash
-export DASHSCOPE_API_KEY="your_api_key_here"
+export DASHSCOPE_API_KEY="API_KEY"
 
 python3 -m vector_pipeline.pipeline.run_svg_dataset_pipeline \
   --input-dir "SVG Dataset" \
@@ -770,7 +770,7 @@ DASHSCOPE_API_KEY
 Example:
 
 ```bash
-export DASHSCOPE_API_KEY="your_api_key_here"
+export DASHSCOPE_API_KEY="API_KEY"
 
 python3 -m vector_pipeline.tokenizer.run_embedding \
   vector_pipeline/examples/single_file/tokenized.json \
